@@ -316,20 +316,33 @@ function parseNotionPage(page) {
   var dateProp   = p[CONFIG.prop_date]   || {};
   var pillarProp = p[CONFIG.prop_pillar] || {};
   var statusProp = p[CONFIG.prop_status] || {};
-  // canva link — trim all property keys to handle trailing spaces in Notion
+  // Trim all property keys to handle trailing spaces in Notion
   var pTrimmed = {};
   Object.keys(p).forEach(function(k){ pTrimmed[k.trim()] = p[k]; });
-  var canvaProp  = pTrimmed['canva link'] || pTrimmed['Canva link'] || pTrimmed['Canva Link'] || {};
-  var canvaRaw   = canvaProp.url
-    || (canvaProp.rich_text && canvaProp.rich_text[0] && canvaProp.rich_text[0].plain_text)
-    || null;
+
+  // canva link (URL property)
+  var canvaProp = pTrimmed['canva link'] || pTrimmed['Canva link'] || pTrimmed['Canva Link'] || {};
+  var canvaRaw  = canvaProp.url || null;
+
+  // Files & media — use uploaded image as the grid thumbnail
+  var filesProp = pTrimmed['Files & media'] || pTrimmed['Files'] || {};
+  var filesArr  = filesProp.files || [];
+  var imageUrl  = null;
+  if (filesArr.length > 0) {
+    var f = filesArr[0];
+    imageUrl = (f.type === 'file' && f.file) ? f.file.url
+             : (f.type === 'external' && f.external) ? f.external.url
+             : null;
+  }
+
   return {
     id:        page.id,
     title:     (titleProp.title  || []).map(function(t){ return t.plain_text; }).join('') || 'Untitled',
     date:      (dateProp.date    && dateProp.date.start)    ? dateProp.date.start.slice(0,10) : null,
     pillar:    (pillarProp.select && pillarProp.select.name) ? pillarProp.select.name          : null,
     status:    (statusProp.status && statusProp.status.name) ? statusProp.status.name           : 'Not started',
-    canvaLink: canvaRaw || null
+    canvaLink: canvaRaw  || null,
+    imageUrl:  imageUrl  || null
   };
 }
 
@@ -348,12 +361,17 @@ function renderGrid() {
     var badge = p.date ? p.date.slice(5,7)+'/'+p.date.slice(8,10) : '';
     var check = p.status==='Done' ? ' ✓' : p.status==='In progress' ? ' ●' : '';
     var embedUrl = canvaEmbedUrl(p.canvaLink);
-    var bgHtml = embedUrl
-      ? '<div class="canva-wrap" onclick="openModal('+scheduledIndex+')">'
-        + '<iframe class="canva-frame" src="'+embedUrl+'" scrolling="no"></iframe>'
+    var hasMedia = p.imageUrl || embedUrl;
+    var bgHtml = p.imageUrl
+      ? '<div class="canva-wrap" onclick="openModal('+scheduledIndex+')" style="background:#000">'
+        + '<img src="'+esc(p.imageUrl)+'" style="width:100%;height:100%;object-fit:cover;display:block">'
         + '<div class="canva-hint">▶</div></div>'
-      : '<div class="post-bg" style="background:'+c+';height:100%">'
-        + '<span class="post-title-lbl">'+esc(trunc(p.title,22))+'</span></div>';
+      : embedUrl
+        ? '<div class="canva-wrap" onclick="openModal('+scheduledIndex+')">'
+          + '<iframe class="canva-frame" src="'+embedUrl+'" scrolling="no"></iframe>'
+          + '<div class="canva-hint">▶</div></div>'
+        : '<div class="post-bg" style="background:'+c+';height:100%">'
+          + '<span class="post-title-lbl">'+esc(trunc(p.title,22))+'</span></div>';
     scheduledIndex++;
     return '<div class="grid-post">'
       + bgHtml
@@ -392,7 +410,7 @@ var modalIdx   = 0;
 // Called from renderGrid — rebuild the canva-posts list
 function buildModalPosts() {
   var scheduled = posts.filter(function(p){ return p.date; }).sort(function(a,b){ return a.date > b.date ? -1 : 1; });
-  modalPosts = scheduled.slice(0,9).filter(function(p){ return p.canvaLink; });
+  modalPosts = scheduled.slice(0,9).filter(function(p){ return p.imageUrl || p.canvaLink; });
 }
 
 function openModal(gridIndex) {
@@ -411,8 +429,13 @@ function showModal() {
   if (!post) return;
   document.getElementById('modal-title').textContent   = post.title;
   document.getElementById('modal-meta').textContent    = post.date ? post.date.slice(5,7)+'/'+post.date.slice(8,10) : '';
-  document.getElementById('modal-iframe').src          = canvaEmbedUrl(post.canvaLink);
   document.getElementById('modal-counter').textContent = (modalIdx+1) + ' / ' + modalPosts.length;
+  var body = document.querySelector('.modal-body');
+  if (post.imageUrl) {
+    body.innerHTML = '<img src="'+post.imageUrl+'" style="width:100%;max-height:480px;object-fit:contain;display:block;background:#111">';
+  } else {
+    body.innerHTML = '<iframe class="modal-iframe" id="modal-iframe" src="'+canvaEmbedUrl(post.canvaLink)+'" allowfullscreen></iframe>';
+  }
   document.getElementById('btn-prev').disabled         = modalIdx === 0;
   document.getElementById('btn-next').disabled         = modalIdx === modalPosts.length - 1;
   document.getElementById('modal').classList.add('open');
