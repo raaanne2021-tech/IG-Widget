@@ -5,45 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IG Profile Widget</title>
 <style>
-/* ============================================================
-   TO CUSTOMIZE FOR ANOTHER ACCOUNT:
-   1. Change the CONFIG object below (in the <script> section)
-   2. Update COLORS and SHORT if content pillars are different
-   That's it — no other changes needed.
-   ============================================================ */
 :root { color-scheme: light; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #fafafa;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 20px 10px;
-  min-height: 100vh;
-}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafafa; display: flex; align-items: flex-start; justify-content: center; padding: 20px 10px; min-height: 100vh; }
 .wrapper { width: 100%; max-width: 380px; }
-.phone {
-  background: #fff;
-  border: 1.5px solid #dbdbdb;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-}
-/* Load bar */
+.phone { background: #fff; border: 1.5px solid #dbdbdb; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
 .load-bar-wrap { height: 2px; background: #efefef; }
 .load-bar { height: 100%; background: linear-gradient(90deg,#405de6,#833ab4,#fd1d1d,#fcb045); width: 0%; transition: width 0.35s ease; }
-/* Status bar */
 .status-bar { background:#fff; padding:8px 16px 4px; display:flex; align-items:center; justify-content:space-between; }
 .status-time { font-size:11px; font-weight:700; color:#1a1a1a; }
 .status-icons { display:flex; gap:4px; align-items:center; font-size:10px; color:#1a1a1a; }
-/* Top bar */
 .topbar { padding:6px 14px 8px; display:flex; align-items:center; justify-content:space-between; border-bottom:0.5px solid #efefef; }
 .topbar-left { display:flex; align-items:center; gap:6px; }
-.topbar-lock { font-size:10px; }
 .handle { font-size:13px; font-weight:700; color:#1a1a1a; }
 .topbar-icons { display:flex; gap:14px; font-size:18px; }
-/* Profile */
 .profile-section { padding:14px 16px 10px; }
 .profile-top { display:flex; align-items:center; gap:16px; margin-bottom:12px; }
 .ig-avatar { width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); padding:3px; flex-shrink:0; }
@@ -59,19 +34,15 @@ body {
 .bio-link { font-size:12px; color:#00376b; font-weight:500; }
 .profile-btns { display:flex; gap:8px; margin-top:10px; }
 .profile-btn { flex:1; background:#efefef; border:none; border-radius:8px; padding:6px 0; font-size:12px; font-weight:600; color:#1a1a1a; cursor:pointer; }
-.profile-btn:hover { background:#e0e0e0; }
-/* Highlights */
 .highlights { display:flex; gap:14px; padding:10px 16px 12px; overflow-x:auto; scrollbar-width:none; border-top:0.5px solid #efefef; }
 .highlights::-webkit-scrollbar { display:none; }
 .hl { display:flex; flex-direction:column; align-items:center; gap:4px; flex-shrink:0; }
 .hl-ring { width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); padding:2.5px; cursor:pointer; }
 .hl-ring-inner { width:100%; height:100%; border-radius:50%; background:#fff; border:2px solid #fff; display:flex; align-items:center; justify-content:center; font-size:22px; }
 .hl-lbl { font-size:10px; color:#1a1a1a; text-align:center; max-width:58px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-/* Grid tabs */
 .grid-tabs { display:flex; border-top:0.5px solid #dbdbdb; }
 .grid-tab { flex:1; padding:9px 0; text-align:center; border:none; background:none; cursor:pointer; color:#999; font-size:16px; }
 .grid-tab.active { color:#1a1a1a; border-top:1.5px solid #1a1a1a; margin-top:-0.5px; }
-/* Post grid */
 .post-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:#dbdbdb; }
 .grid-post { aspect-ratio:1; position:relative; overflow:hidden; cursor:pointer; }
 .grid-post:hover .post-overlay { opacity:1; }
@@ -81,47 +52,56 @@ body {
 .post-title-lbl { font-size:8px; color:rgba(255,255,255,0.95); line-height:1.3; text-shadow:0 1px 3px rgba(0,0,0,0.7); }
 .post-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.3); opacity:0; transition:opacity 0.2s; display:flex; align-items:center; justify-content:center; gap:12px; color:#fff; font-size:11px; font-weight:600; }
 .grid-empty { aspect-ratio:1; background:#f0f0ee; }
-/* Status strip */
 .status-strip { padding:10px 16px; text-align:center; font-size:11px; color:#aaa; border-top:0.5px solid #efefef; min-height:34px; }
-/* Bottom row */
 .bottom-row { display:flex; align-items:center; justify-content:space-between; padding:6px 16px; border-top:0.5px solid #efefef; background:#fafafa; }
 .refresh-btn { background:none; border:0.5px solid #dbdbdb; border-radius:14px; padding:4px 12px; font-size:10px; color:#555; cursor:pointer; }
 .refresh-btn:hover { background:#efefef; }
 .legend { display:flex; flex-wrap:wrap; gap:4px; }
 .legend-dot { width:8px; height:8px; border-radius:50%; }
-/* Spinner */
+.error-state { padding: 24px 20px; text-align: center; font-size: 12px; color: #dc2626; }
 @keyframes spin { to { transform:rotate(360deg); } }
 .spin { display:inline-block; width:10px; height:10px; border:1.5px solid #ddd; border-top-color:#999; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:4px; }
+/* Canva thumbnail inside grid cell */
+.canva-wrap { position:absolute; inset:0; overflow:hidden; background:#f5f5f5; cursor:pointer; }
+.canva-frame { width:300%; height:300%; transform:scale(0.333); transform-origin:top left; border:none; pointer-events:none; display:block; }
+.canva-hint { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.25); opacity:0; transition:opacity 0.2s; font-size:20px; }
+.canva-wrap:hover .canva-hint { opacity:1; }
+/* Carousel modal */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; flex-direction:column; gap:12px; }
+.modal-overlay.open { display:flex; }
+.modal-card { background:#fff; border-radius:14px; overflow:hidden; width:min(480px,92vw); max-height:90vh; display:flex; flex-direction:column; }
+.modal-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:0.5px solid #efefef; }
+.modal-title { font-size:12px; font-weight:700; color:#1a1a1a; flex:1; margin-right:8px; }
+.modal-meta { font-size:10px; color:#737373; }
+.modal-close { background:none; border:none; font-size:20px; color:#737373; cursor:pointer; line-height:1; padding:0 0 0 12px; }
+.modal-close:hover { color:#1a1a1a; }
+.modal-body { position:relative; flex:1; min-height:320px; background:#f5f5f5; }
+.modal-iframe { width:100%; height:100%; min-height:320px; border:none; display:block; }
+.modal-nav { display:flex; align-items:center; justify-content:center; gap:16px; padding:10px; }
+.modal-btn { background:#fff; border:1px solid #dbdbdb; border-radius:20px; padding:6px 20px; font-size:12px; font-weight:600; cursor:pointer; color:#1a1a1a; }
+.modal-btn:hover { background:#f5f5f5; }
+.modal-btn:disabled { opacity:0.3; cursor:default; }
+.modal-counter { font-size:11px; color:#737373; min-width:50px; text-align:center; }
 </style>
 </head>
 <body>
 <div class="wrapper">
 <div class="phone">
   <div class="load-bar-wrap"><div class="load-bar" id="bar"></div></div>
-
-  <!-- Status bar -->
   <div class="status-bar">
     <span class="status-time" id="clock">9:41 AM</span>
     <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
   </div>
-
-  <!-- Top bar -->
   <div class="topbar">
     <div class="topbar-left">
-      <span class="topbar-lock">🔒</span>
+      <span>🔒</span>
       <span class="handle" id="el-handle"></span>
     </div>
     <div class="topbar-icons"><span>＋</span><span>☰</span></div>
   </div>
-
-  <!-- Profile -->
   <div class="profile-section">
     <div class="profile-top">
-      <div class="ig-avatar">
-        <div class="ig-avatar-inner">
-          <span class="ig-avatar-initials" id="el-initials"></span>
-        </div>
-      </div>
+      <div class="ig-avatar"><div class="ig-avatar-inner"><span class="ig-avatar-initials" id="el-initials"></span></div></div>
       <div class="stats">
         <div class="stat"><span class="stat-n" id="el-posts">—</span><span class="stat-l">posts</span></div>
         <div class="stat"><span class="stat-n" id="el-followers"></span><span class="stat-l">followers</span></div>
@@ -137,24 +117,14 @@ body {
       <button class="profile-btn">Share profile</button>
     </div>
   </div>
-
-  <!-- Story highlights -->
   <div class="highlights" id="el-highlights"></div>
-
-  <!-- Grid tabs -->
   <div class="grid-tabs">
     <button class="grid-tab active">⊞</button>
     <button class="grid-tab">▶</button>
     <button class="grid-tab">🏷</button>
   </div>
-
-  <!-- Grid -->
   <div class="post-grid" id="post-grid"></div>
-
-  <!-- Status -->
   <div class="status-strip" id="status"></div>
-
-  <!-- Bottom -->
   <div class="bottom-row">
     <div class="legend" id="legend"></div>
     <button class="refresh-btn" onclick="loadPosts()">↻ Refresh</button>
@@ -162,85 +132,136 @@ body {
 </div>
 </div>
 
+<!-- Carousel modal -->
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title"></span>
+      <span class="modal-meta" id="modal-meta"></span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <iframe class="modal-iframe" id="modal-iframe" src="" allowfullscreen></iframe>
+    </div>
+    <div class="modal-nav">
+      <button class="modal-btn" id="btn-prev" onclick="stepModal(-1)">← Prev</button>
+      <span class="modal-counter" id="modal-counter"></span>
+      <button class="modal-btn" id="btn-next" onclick="stepModal(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ============================================================
-//  CONFIG — change these values for each account
+//  ACCOUNTS — add a new block for each business
+//  URL usage: ig-widget-six.vercel.app/?account=ppc
+//             ig-widget-six.vercel.app/?account=tirluna
+//
+//  Each account also needs its own env var in Vercel:
+//    NOTION_TOKEN_PPC, NOTION_TOKEN_TIRLUNA, etc.
 // ============================================================
-var CONFIG = {
-  // Notion database ID (from the database URL or your integration setup)
-  database_id: '2ee34595-b2aa-8000-b20e-f62d7045742b',
+var ACCOUNTS = {
 
-  // Instagram profile info
-  handle:    'platinumpremier_sf',
-  name:      'Platinum Premier Construction',
-  category:  'Construction company',
-  bio:       '🏗️ Design-Build Contractor · San Francisco\nRenovations, Additions & Custom Builds\nCSLB Licensed · SF Bay Area\n📩 Free Consultation — link below',
-  link:      '🔗 linktr.ee/platinumpremier_sf',
-  followers: '1,240',
-  following: '312',
+  ppc: {
+    database_id: '2ee34595-b2aa-8000-b20e-f62d7045742b',
+    handle:    'platinumpremier_sf',
+    name:      'Platinum Premier Construction',
+    category:  'Construction company',
+    bio:       '🏗️ Design-Build Contractor · San Francisco\nRenovations, Additions & Custom Builds\nCSLB Licensed · SF Bay Area\n📩 Free Consultation — link below',
+    link:      '🔗 linktr.ee/platinumpremier_sf',
+    followers: '1,240',
+    following: '312',
+    highlights: [
+      { emoji: '🏠', label: 'Projects' },
+      { emoji: '✨', label: 'Before/After' },
+      { emoji: '💡', label: 'Tips' },
+      { emoji: '❓', label: 'FAQ' },
+      { emoji: '🔨', label: 'Process' },
+      { emoji: '⭐', label: 'Reviews' }
+    ],
+    prop_title:  'Name',
+    prop_date:   'Date',
+    prop_pillar: 'Content Pillar',
+    prop_status: 'Status',
+    colors: {
+      'Before and After posts / After posts only': '#7c3aed',
+      'PPC FAQs':                                  '#2563eb',
+      'Fun facts':                                 '#ea580c',
+      'Seasonal reminders':                        '#16a34a',
+      'Red flag series':                           '#dc2626',
+      'Green flag series':                         '#15803d',
+      'Know your home':                            '#db2777',
+      'This or That questions for polls':          '#0891b2',
+      'Newsletter':                                '#b45309',
+      'Toolbox terms':                             '#9f1239',
+      'Material spotlight':                        '#6d28d9',
+      'Behind the build':                          '#374151'
+    }
+  },
 
-  // Story highlights: array of { emoji, label }
-  highlights: [
-    { emoji: '🏠', label: 'Projects' },
-    { emoji: '✨', label: 'Before/After' },
-    { emoji: '💡', label: 'Tips' },
-    { emoji: '❓', label: 'FAQ' },
-    { emoji: '🔨', label: 'Process' },
-    { emoji: '⭐', label: 'Reviews' }
-  ],
+  // ── ADD A NEW ACCOUNT BELOW ──────────────────────────────
+  // Copy the block above, change the key (e.g. "tirluna"),
+  // fill in the details, add NOTION_TOKEN_TIRLUNA in Vercel.
+  //
+  // example: {
+  //   database_id: 'paste-notion-database-id-here',
+  //   handle:    'their_ig_handle',
+  //   name:      'Their Business Name',
+  //   category:  'Their category',
+  //   bio:       'Their bio text\nLine 2',
+  //   link:      '🔗 theirwebsite.com',
+  //   followers: '500',
+  //   following: '200',
+  //   highlights: [{ emoji: '📸', label: 'Work' }],
+  //   prop_title:  'Name',
+  //   prop_date:   'Date',
+  //   prop_pillar: 'Content Pillar',
+  //   prop_status: 'Status',
+  //   colors: { 'Pillar Name': '#hexcolor' }
+  // }
 
-  // Notion property names (update if your database uses different names)
-  prop_title:  'Name',
-  prop_date:   'Date',
-  prop_pillar: 'Content Pillar',
-  prop_status: 'Status'
 };
 
 // ============================================================
-//  COLORS — map each content pillar to a color
-//  Add or remove entries to match your database's select options
+//  BOOT — read ?account= from URL, load matching config
 // ============================================================
-var COLORS = {
-  'Before and After posts / After posts only': '#7c3aed',
-  'PPC FAQs':                                  '#2563eb',
-  'Fun facts':                                 '#ea580c',
-  'Seasonal reminders':                        '#16a34a',
-  'Red flag series':                           '#dc2626',
-  'Green flag series':                         '#15803d',
-  'Know your home':                            '#db2777',
-  'This or That questions for polls':          '#0891b2',
-  'Newsletter':                                '#b45309',
-  'Toolbox terms':                             '#9f1239',
-  'Material spotlight':                        '#6d28d9',
-  'Behind the build':                          '#374151'
-};
-var SHORT = {
-  'Before and After posts / After posts only': 'Before/After',
-  'PPC FAQs':                                  'FAQ',
-  'Fun facts':                                 'Fun fact',
-  'Seasonal reminders':                        'Seasonal',
-  'Red flag series':                           '🚩 Red flag',
-  'Green flag series':                         '🟢 Green flag',
-  'Know your home':                            'Know home',
-  'This or That questions for polls':          'This/That',
-  'Newsletter':                                'Newsletter',
-  'Toolbox terms':                             'Toolbox',
-  'Material spotlight':                        'Material',
-  'Behind the build':                          'BTS'
-};
+var accountKey = (new URLSearchParams(window.location.search)).get('account') || 'ppc';
+var CONFIG = ACCOUNTS[accountKey];
+
+if (!CONFIG) {
+  document.querySelector('.phone').innerHTML =
+    '<div class="error-state">⚠️ Unknown account: <strong>' + accountKey + '</strong><br><br>' +
+    'Add it to the ACCOUNTS object in index.html.</div>';
+  throw new Error('Unknown account: ' + accountKey);
+}
+
+// Fill profile info
+document.getElementById('el-handle').textContent    = CONFIG.handle;
+document.getElementById('el-name').textContent      = CONFIG.name;
+document.getElementById('el-category').textContent  = CONFIG.category;
+document.getElementById('el-bio').textContent       = CONFIG.bio;
+document.getElementById('el-link').textContent      = CONFIG.link;
+document.getElementById('el-followers').textContent = CONFIG.followers;
+document.getElementById('el-following').textContent = CONFIG.following;
+document.getElementById('el-initials').textContent  =
+  CONFIG.name.split(' ').slice(0,3).map(function(w){ return w[0]; }).join('');
+document.title = CONFIG.handle + ' · IG Preview';
+
+document.getElementById('el-highlights').innerHTML = CONFIG.highlights.map(function(h) {
+  return '<div class="hl"><div class="hl-ring"><div class="hl-ring-inner">' + h.emoji +
+    '</div></div><div class="hl-lbl">' + h.label + '</div></div>';
+}).join('');
 
 // ============================================================
 //  HELPERS
 // ============================================================
-function col(p) { return COLORS[p] || '#6b7280'; }
-function srt(p) { return p ? (SHORT[p] || p.slice(0,12)) : ''; }
+function col(p) { return (CONFIG.colors && CONFIG.colors[p]) || '#6b7280'; }
 function trunc(s, n) { return s && s.length > n ? s.slice(0,n)+'…' : (s||''); }
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function pad(n) { return String(n).padStart(2,'0'); }
 function setBar(p) { document.getElementById('bar').style.width = p+'%'; }
 function setStatus(html) { document.getElementById('status').innerHTML = html; }
 
-// Live clock
 function updateClock() {
   var now = new Date(), h = now.getHours(), m = now.getMinutes();
   var ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
@@ -249,30 +270,7 @@ function updateClock() {
 updateClock(); setInterval(updateClock, 30000);
 
 // ============================================================
-//  BOOT — fill in profile info from CONFIG
-// ============================================================
-(function boot() {
-  document.getElementById('el-handle').textContent   = CONFIG.handle;
-  document.getElementById('el-name').textContent     = CONFIG.name;
-  document.getElementById('el-category').textContent = CONFIG.category;
-  document.getElementById('el-bio').textContent      = CONFIG.bio;
-  document.getElementById('el-link').textContent     = CONFIG.link;
-  document.getElementById('el-followers').textContent = CONFIG.followers;
-  document.getElementById('el-following').textContent = CONFIG.following;
-  document.getElementById('el-initials').textContent =
-    CONFIG.name.split(' ').slice(0,3).map(function(w){ return w[0]; }).join('');
-
-  // Story highlights
-  var hlHtml = CONFIG.highlights.map(function(h) {
-    return '<div class="hl">'
-      + '<div class="hl-ring"><div class="hl-ring-inner">' + h.emoji + '</div></div>'
-      + '<div class="hl-lbl">' + esc(h.label) + '</div></div>';
-  }).join('');
-  document.getElementById('el-highlights').innerHTML = hlHtml;
-})();
-
-// ============================================================
-//  DATA — fetch posts from Notion via the /api/notion proxy
+//  LOAD POSTS
 // ============================================================
 var posts = [];
 
@@ -286,22 +284,18 @@ async function loadPosts() {
     var res = await fetch('/api/notion', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'query', database_id: CONFIG.database_id })
+      body: JSON.stringify({
+        action: 'query',
+        database_id: CONFIG.database_id,
+        account: accountKey
+      })
     });
 
-    if (!res.ok) {
-      var err = await res.json().catch(function(){ return { error: res.statusText }; });
-      throw new Error(err.error || res.statusText);
-    }
-
     var data = await res.json();
-    if (data.object === 'error') throw new Error(data.message);
+    if (!res.ok || data.object === 'error') throw new Error(data.error || data.message);
 
-    // Parse each Notion page into a simple post object
     posts = (data.results || []).map(parseNotionPage);
-    setBar(90);
-    renderGrid();
-    setBar(100);
+    setBar(90); renderGrid(); setBar(100);
     setTimeout(function(){ setBar(0); }, 800);
 
   } catch(e) {
@@ -310,87 +304,141 @@ async function loadPosts() {
   }
 }
 
+function canvaEmbedUrl(link) {
+  if (!link) return null;
+  var m = link.match(/canva\.com\/design\/([^\/\?]+)/);
+  return m ? 'https://www.canva.com/design/' + m[1] + '/view?embed' : null;
+}
+
 function parseNotionPage(page) {
   var p = page.properties || {};
-
-  // Title
-  var titleProp = p[CONFIG.prop_title] || {};
-  var title = (titleProp.title || []).map(function(t){ return t.plain_text; }).join('') || 'Untitled';
-
-  // Date
-  var dateProp = p[CONFIG.prop_date] || {};
-  var date = (dateProp.date && dateProp.date.start) ? dateProp.date.start.slice(0,10) : null;
-
-  // Content Pillar (select)
+  var titleProp  = p[CONFIG.prop_title]  || {};
+  var dateProp   = p[CONFIG.prop_date]   || {};
   var pillarProp = p[CONFIG.prop_pillar] || {};
-  var pillar = (pillarProp.select && pillarProp.select.name) ? pillarProp.select.name : null;
-
-  // Status (status type)
   var statusProp = p[CONFIG.prop_status] || {};
-  var status = (statusProp.status && statusProp.status.name) ? statusProp.status.name : 'Not started';
-
-  return { id: page.id, title: title, date: date, pillar: pillar, status: status };
+  // canva link — handle both URL and rich_text property types
+  var canvaProp  = p['canva link'] || p['Canva link'] || p['Canva Link'] || {};
+  var canvaRaw   = canvaProp.url
+    || (canvaProp.rich_text && canvaProp.rich_text[0] && canvaProp.rich_text[0].plain_text)
+    || null;
+  return {
+    id:        page.id,
+    title:     (titleProp.title  || []).map(function(t){ return t.plain_text; }).join('') || 'Untitled',
+    date:      (dateProp.date    && dateProp.date.start)    ? dateProp.date.start.slice(0,10) : null,
+    pillar:    (pillarProp.select && pillarProp.select.name) ? pillarProp.select.name          : null,
+    status:    (statusProp.status && statusProp.status.name) ? statusProp.status.name           : 'Not started',
+    canvaLink: canvaRaw || null
+  };
 }
 
 // ============================================================
 //  RENDER
 // ============================================================
 function renderGrid() {
-  var scheduled   = posts.filter(function(p){ return p.date; });
+  var scheduled   = posts.filter(function(p){ return p.date; }).sort(function(a,b){ return a.date > b.date ? -1 : 1; });
   var unscheduled = posts.filter(function(p){ return !p.date; });
 
-  // Sort newest first (Instagram shows newest top-left)
-  scheduled.sort(function(a, b){ return a.date > b.date ? -1 : 1; });
-
-  // Post count
   document.getElementById('el-posts').textContent = scheduled.length || '—';
 
-  // Build 9-cell grid
-  var cells = scheduled.slice(0, 9).map(function(p) {
+  var scheduledIndex = 0;
+  var cells = scheduled.slice(0,9).map(function(p) {
     var c = col(p.pillar);
-    var month = p.date ? p.date.slice(5,7) : '';
-    var day   = p.date ? p.date.slice(8,10) : '';
-    var badge = month && day ? month + '/' + day : '';
-    var check = p.status === 'Done' ? ' ✓' : p.status === 'In progress' ? ' ●' : '';
+    var badge = p.date ? p.date.slice(5,7)+'/'+p.date.slice(8,10) : '';
+    var check = p.status==='Done' ? ' ✓' : p.status==='In progress' ? ' ●' : '';
+    var embedUrl = canvaEmbedUrl(p.canvaLink);
+    var bgHtml = embedUrl
+      ? '<div class="canva-wrap" onclick="openModal('+scheduledIndex+')">'
+        + '<iframe class="canva-frame" src="'+embedUrl+'" scrolling="no"></iframe>'
+        + '<div class="canva-hint">▶</div></div>'
+      : '<div class="post-bg" style="background:'+c+';height:100%">'
+        + '<span class="post-title-lbl">'+esc(trunc(p.title,22))+'</span></div>';
+    scheduledIndex++;
     return '<div class="grid-post">'
-      + '<div class="post-bg" style="background:' + c + ';height:100%">'
-      +   '<span class="post-title-lbl">' + esc(trunc(p.title, 22)) + '</span>'
-      + '</div>'
-      + '<div class="post-meta">'
-      +   '<span class="post-date-badge">' + badge + check + '</span>'
-      + '</div>'
-      + '<div class="post-overlay"><span>♥ —</span><span>💬 —</span></div>'
+      + bgHtml
+      + '<div class="post-meta"><span class="post-date-badge">'+badge+check+'</span></div>'
+      + (embedUrl ? '' : '<div class="post-overlay"><span>♥ —</span><span>💬 —</span></div>')
       + '</div>';
   });
-
-  // Empty placeholders to fill 9 cells
-  for (var i = cells.length; i < 9; i++) {
-    cells.push('<div class="grid-empty"></div>');
-  }
+  for (var i = cells.length; i < 9; i++) cells.push('<div class="grid-empty"></div>');
   document.getElementById('post-grid').innerHTML = cells.join('');
 
-  // Status strip
   if (posts.length === 0) {
     setStatus('<span class="spin"></span> Loading…');
   } else if (scheduled.length === 0) {
-    setStatus('No scheduled posts yet. Add dates in Notion to see them here.');
+    setStatus('No scheduled posts. Add dates in Notion to see them here.');
   } else {
-    setStatus('<strong>' + scheduled.length + '</strong> scheduled · <strong>' + unscheduled.length + '</strong> in backlog');
+    setStatus('<strong>'+scheduled.length+'</strong> scheduled · <strong>'+unscheduled.length+'</strong> in backlog');
   }
 
-  // Legend — only pillars that appear in scheduled posts
   var seen = {};
   scheduled.forEach(function(p){ if (p.pillar) seen[p.pillar] = true; });
   document.getElementById('legend').innerHTML = Object.keys(seen).map(function(p) {
-    return '<div style="display:flex;align-items:center;gap:3px" title="' + esc(p) + '">'
-      + '<div class="legend-dot" style="background:' + col(p) + '"></div>'
-      + '<span style="font-size:8px;color:#777">' + esc(srt(p)) + '</span>'
-      + '</div>';
+    return '<div style="display:flex;align-items:center;gap:3px" title="'+esc(p)+'">'
+      + '<div class="legend-dot" style="background:'+col(p)+'"></div>'
+      + '<span style="font-size:8px;color:#777">'+esc(p.slice(0,10))+'</span></div>';
   }).join('');
 }
 
-// Start
 loadPosts();
+
+// ============================================================
+//  CAROUSEL MODAL
+// ============================================================
+var modalPosts = [];  // posts with canva links, in grid order
+var modalIdx   = 0;
+
+// Called from renderGrid — rebuild the canva-posts list
+function buildModalPosts() {
+  var scheduled = posts.filter(function(p){ return p.date; }).sort(function(a,b){ return a.date > b.date ? -1 : 1; });
+  modalPosts = scheduled.slice(0,9).filter(function(p){ return p.canvaLink; });
+}
+
+function openModal(gridIndex) {
+  buildModalPosts();
+  // Find which modal index matches this grid position
+  var scheduled = posts.filter(function(p){ return p.date; }).sort(function(a,b){ return a.date > b.date ? -1 : 1; });
+  var post = scheduled[gridIndex];
+  if (!post || !post.canvaLink) return;
+  modalIdx = modalPosts.findIndex(function(p){ return p.id === post.id; });
+  if (modalIdx === -1) return;
+  showModal();
+}
+
+function showModal() {
+  var post = modalPosts[modalIdx];
+  if (!post) return;
+  document.getElementById('modal-title').textContent   = post.title;
+  document.getElementById('modal-meta').textContent    = post.date ? post.date.slice(5,7)+'/'+post.date.slice(8,10) : '';
+  document.getElementById('modal-iframe').src          = canvaEmbedUrl(post.canvaLink);
+  document.getElementById('modal-counter').textContent = (modalIdx+1) + ' / ' + modalPosts.length;
+  document.getElementById('btn-prev').disabled         = modalIdx === 0;
+  document.getElementById('btn-next').disabled         = modalIdx === modalPosts.length - 1;
+  document.getElementById('modal').classList.add('open');
+}
+
+function stepModal(dir) {
+  modalIdx = Math.max(0, Math.min(modalPosts.length - 1, modalIdx + dir));
+  // Clear iframe first to avoid flash of old design
+  document.getElementById('modal-iframe').src = '';
+  setTimeout(showModal, 80);
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('modal-iframe').src = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+// Keyboard nav
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('modal').classList.contains('open')) return;
+  if (e.key === 'ArrowRight') stepModal(1);
+  if (e.key === 'ArrowLeft')  stepModal(-1);
+  if (e.key === 'Escape')     closeModal();
+});
 </script>
 </body>
 </html>
