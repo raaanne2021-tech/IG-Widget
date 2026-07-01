@@ -316,8 +316,10 @@ function parseNotionPage(page) {
   var dateProp   = p[CONFIG.prop_date]   || {};
   var pillarProp = p[CONFIG.prop_pillar] || {};
   var statusProp = p[CONFIG.prop_status] || {};
-  // canva link — handle both URL and rich_text property types
-  var canvaProp  = p['canva link'] || p['Canva link'] || p['Canva Link'] || {};
+  // canva link — trim all property keys to handle trailing spaces in Notion
+  var pTrimmed = {};
+  Object.keys(p).forEach(function(k){ pTrimmed[k.trim()] = p[k]; });
+  var canvaProp  = pTrimmed['canva link'] || pTrimmed['Canva link'] || pTrimmed['Canva Link'] || {};
   var canvaRaw   = canvaProp.url
     || (canvaProp.rich_text && canvaProp.rich_text[0] && canvaProp.rich_text[0].plain_text)
     || null;
